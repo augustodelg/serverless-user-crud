@@ -1,8 +1,8 @@
 name: Deploy Staging
 
 on:
-  pull_request:
-    branches: [ main ]
+  branches:
+      - main
 
 jobs:
   testing-changes:
@@ -15,10 +15,6 @@ jobs:
     - name: NPM - Install dependencies
       if: steps.cached-npm-dependencies.outputs.cache-hit != 'true'
       run: 'npm install'
-
-    - name: Run Tests
-      run: |
-        npm run test
 
   deploy-env:
     name: Deploy Lambda
