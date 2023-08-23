@@ -1,8 +1,9 @@
 name: Deploy Staging
 
 on:
-  branches:
-      - main
+  push:
+    branches:
+        - main
 
 jobs:
   testing-changes:
