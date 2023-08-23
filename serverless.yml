@@ -1,0 +1,80 @@
+service: user-crud
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "dynamodb:*"
+          Resource:
+            - "arn:aws:dynamodb:us-east-1:*:*"
+  
+plugins:
+  - serverless-offline
+  -  serverless-dynamodb
+package: 
+  individually: true
+  patterns:
+      - "!.dynamodb"
+      - "!node_modules"
+
+custom:
+  serverless-dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000 
+      inMemory: true
+      migrate: true
+
+functions:
+  getUser:
+    handler: getUser/handler.getAll
+    events:
+      - http:
+          path: users
+          method: GET
+  findUser:
+    handler: findUser/handler.find
+    events:
+      - http:
+          path: users/{email}
+          method: GET
+  createUser:
+    handler: createUser/handler.create
+    events:
+      - http:
+          path: users
+          method: POST
+  updateUser:
+    handler: updateUser/handler.update
+    events:
+      - http:
+          path: users/{email}
+          method: PATCH
+  deleteUser:
+    handler: deleteUser/handler.deleteUser
+    events:
+      - http:
+          path: users/{email}
+          method: DELETE
+  
+
+resources:
+  Resources:
+    usersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: usersTable
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
