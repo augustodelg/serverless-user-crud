@@ -18,8 +18,7 @@ plugins:
 package: 
   individually: true
   patterns:
-      - "!.dynamodb"
-      - "!node_modules"
+      - "!*/**"
 
 custom:
   serverless-dynamodb:
@@ -33,30 +32,45 @@ custom:
 functions:
   getUser:
     handler: getUser/handler.getAll
+    package:
+      patterns:
+        - "getUser/handler.js"
     events:
       - http:
           path: users
           method: GET
   findUser:
     handler: findUser/handler.find
+    package:
+      patterns:
+        - "findUser/handler.js"
     events:
       - http:
           path: users/{email}
           method: GET
   createUser:
     handler: createUser/handler.create
+    package:
+      patterns:
+        - "createUser/handler.js"
     events:
       - http:
           path: users
           method: POST
   updateUser:
     handler: updateUser/handler.update
+    package:
+      patterns:
+        - "updateUser/handler.js"
     events:
       - http:
           path: users/{email}
           method: PATCH
   deleteUser:
     handler: deleteUser/handler.deleteUser
+    package:
+      patterns:
+        - "deleteUser/handler.js"
     events:
       - http:
           path: users/{email}
